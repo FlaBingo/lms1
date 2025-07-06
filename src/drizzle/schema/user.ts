@@ -20,5 +20,5 @@ export const UserTable = pgTable("users", {
 })
 
 export const UserRelationships = relations(UserTable, ({one, many}) => ({
-  userCourseAccesses: many(UserCourseAccessTable)
+  userCourseAccesses: many(UserCourseAccessTable),
 }))
