@@ -1,5 +1,5 @@
 import { env } from "@/data/env/server";
-import { insertUser } from "@/features/users/db/users";
+import { deleteUser, insertUser, updateUser } from "@/features/users/db/users";
 import { syncClerkUserMetadata } from "@/services/clerk";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { Webhook } from "svix";
@@ -53,9 +53,22 @@ export async function POST(req: Request) {
         })
 
         await syncClerkUserMetadata(user);
+      } else {
+        await updateUser({ clerkUserId: event.data.id }, {
+          email,
+          name,
+          imageUrl: event.data.image_url,
+          role: event.data.public_metadata.role,
+        })
       }
+      break
+    }
+    case "user.deleted": {
+      if (event.data.id != null) {
+        await deleteUser({ clerkUserId: event.data.id })
+      }
+      break
     }
   }
-
-  // return new Response("OK", { status: 200 });
+  return new Response("the route is working", { status: 200 })
 }

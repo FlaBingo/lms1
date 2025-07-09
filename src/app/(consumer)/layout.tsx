@@ -1,13 +1,9 @@
 import { Button } from "@/components/ui/button";
-import {
-  SignedIn,
-  SignedOut,
-  SignIn,
-  SignInButton,
-  UserButton,
-} from "@clerk/nextjs";
+import { canAccessAdminPages } from "@/permissions/general";
+import { getCurrentUser } from "@/services/clerk";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import { ReactNode, Suspense } from "react";
+import { ReactNode } from "react";
 
 export default function ConsumerLayout({
   children,
@@ -31,12 +27,8 @@ function Navbar() {
           Flabingo
         </Link>
         <SignedIn>
-          <Link
-            href={"/admin"}
-            className="hover:bg-accent/10 flex items-center px-2"
-          >
-            Admin
-          </Link>
+          <AdminLink />
+
           <Link
             href={"/courses"}
             className="hover:bg-accent/10 flex items-center px-2"
@@ -66,5 +58,15 @@ function Navbar() {
         </SignedOut>
       </nav>
     </header>
+  );
+}
+
+async function AdminLink() {
+  const user = await getCurrentUser();
+  if(!canAccessAdminPages(user)) return null;
+  return (
+    <Link href={"/admin"} className="hover:bg-accent/10 flex items-center px-2">
+      Admin
+    </Link>
   );
 }
