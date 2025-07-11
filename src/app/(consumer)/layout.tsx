@@ -10,18 +10,20 @@ export default function ConsumerLayout({
 }: Readonly<{ children: ReactNode }>) {
   return (
     <>
-      <Navbar />
-      {children}
+      <div className="flex flex-col items-center">
+        <Navbar />
+        {children}
+      </div>
     </>
   );
 }
 
 function Navbar() {
   return (
-    <header className="flex h-12 shadow bg-background z-10">
-      <nav className="flex gap-4 container">
+    <header className="w-full flex h-12 shadow bg-background z-10 justify-center">
+      <nav className="container flex gap-4">
         <Link
-          className="mr-auto text-lg hover:undelrine px-2 flex items-center"
+          className="mr-auto text-lg hover:undelrine flex items-center font-bold"
           href={"/"}
         >
           Flabingo
