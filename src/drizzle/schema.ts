@@ -1,3 +1,4 @@
+// src/drizzle/schema.ts
 export * from "./schema/course";
 export * from "./schema/courseProduct";
 export * from "./schema/courseSection";
