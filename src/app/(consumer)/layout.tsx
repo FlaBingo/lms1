@@ -1,3 +1,4 @@
+// src/app/(consumer)/layout.tsx
 import { Button } from "@/components/ui/button";
 import { canAccessAdminPages } from "@/permissions/general";
 import { getCurrentUser } from "@/services/clerk";

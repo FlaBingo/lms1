@@ -1,3 +1,4 @@
+// src/app/admin/courses/page.tsx
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
