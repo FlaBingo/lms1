@@ -4,12 +4,22 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { courseSchema } from "../schemas/courses";
 import z from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { RequiredLabelIcon } from "@/components/RequiredLabelIcon";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { createCourse } from "../actions/courses";
+import { toast } from "sonner";
+import { actionToast } from "@/components/ui/sonner";
 
 export function CourseForm() {
   const form = useForm<z.infer<typeof courseSchema>>({
@@ -20,8 +30,9 @@ export function CourseForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof courseSchema>) {
-    createCourse(values)
+  async function onSubmit(values: z.infer<typeof courseSchema>) {
+    const data = await createCourse(values);
+    actionToast({ actionData: data });
   }
 
   return (
@@ -42,6 +53,7 @@ export function CourseForm() {
               <FormControl>
                 <Input {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -57,6 +69,7 @@ export function CourseForm() {
               <FormControl>
                 <Textarea className="min-h-20 resize-none" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />

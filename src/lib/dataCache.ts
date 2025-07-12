@@ -1,5 +1,5 @@
 // src/lib/dataCache.ts
-type CACHE_TAG = "products" | "users";
+type CACHE_TAG = "products" | "users" | "courses";
 
 export function getGlobalTab(tag: CACHE_TAG){
   return `global:${tag}` as const;
