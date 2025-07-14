@@ -1,4 +1,5 @@
 // src/app/(consumer)/layout.tsx
+import { ThemeToggle } from "@/components/ThemeToggleButton";
 import { Button } from "@/components/ui/button";
 import { canAccessAdminPages } from "@/permissions/general";
 import { getCurrentUser } from "@/services/clerk";
@@ -29,6 +30,9 @@ function Navbar() {
         >
           Flabingo
         </Link>
+        <div className="h-full flex items-center">
+          <ThemeToggle />
+        </div>
         <SignedIn>
           <AdminLink />
 
@@ -66,7 +70,7 @@ function Navbar() {
 
 async function AdminLink() {
   const user = await getCurrentUser();
-  if(!canAccessAdminPages(user)) return null;
+  if (!canAccessAdminPages(user)) return null;
   return (
     <Link href={"/admin"} className="hover:bg-accent/10 flex items-center px-2">
       Admin

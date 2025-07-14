@@ -1,4 +1,5 @@
 // src/app/admin/layout.tsx
+import { ThemeToggle } from "@/components/ThemeToggleButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { canAccessAdminPages } from "@/permissions/general";
@@ -29,6 +30,9 @@ function Navbar() {
             Flabingo
           </Link>
           <Badge>Admin</Badge>
+        </div>
+        <div className="h-full flex items-center">
+          <ThemeToggle />
         </div>
         <Link
           href={"/admin/courses"}
