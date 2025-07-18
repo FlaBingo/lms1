@@ -30,7 +30,7 @@ export default async function CoursesPage() {
   );
 }
 
-// don't know what's happening here
+
 async function getCourses() {
   "use cache";
   cacheTag(getCourseGlobalTag());
@@ -39,8 +39,8 @@ async function getCourses() {
     .select({
       id: DbCourseTable.id,
       name: DbCourseTable.name,
-      sectionCount: countDistinct(CourseSectionTable),
-      lessonCount: countDistinct(LessonTable),
+      sectionsCount: countDistinct(CourseSectionTable),
+      lessonsCount: countDistinct(LessonTable),
       studentsCount: countDistinct(UserCourseAccessTable),
     })
     .from(DbCourseTable)

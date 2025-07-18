@@ -15,13 +15,17 @@ import { Trash2Icon } from "lucide-react";
 import Link from "next/link";
 import { deleteCourse } from "../actions/courses";
 
-export function CourseTable({ courses }: { courses: {
-  id: string,
-  name: string,
-  sectionsCount: number,
-  lessonsCount: number,
-  studentsCount: number,
-}[] }) {
+export function CourseTable({
+  courses,
+}: {
+  courses: {
+    id: string;
+    name: string;
+    sectionsCount: number;
+    lessonsCount: number;
+    studentsCount: number;
+  }[];
+}) {
   return (
     <Table>
       <TableHeader>
@@ -59,11 +63,13 @@ export function CourseTable({ courses }: { courses: {
             <TableCell>
               <div className="flex gap-2">
                 <Button asChild>
-                  <Link href={`/admin/courses/${course.id}/edit`}>
-                    Edit
-                  </Link>
+                  <Link href={`/admin/courses/${course.id}/edit`}>Edit</Link>
                 </Button>
-                <ActionButton variant={"destructiveOutline"} requireAreYouSure action={deleteCourse.bind(null, course.id)}>
+                <ActionButton
+                  variant={"destructiveOutline"}
+                  requireAreYouSure
+                  action={deleteCourse.bind(null, course.id)}
+                >
                   {/* is equivalent to action={() => deleteCourse(course.id)} */}
                   <Trash2Icon />
                   <span className="sr-only">Delete</span>

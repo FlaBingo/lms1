@@ -18,7 +18,6 @@ import { useForm } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { createCourse } from "../actions/courses";
-import { toast } from "sonner";
 import { actionToast } from "@/components/ui/sonner";
 
 export function CourseForm() {
