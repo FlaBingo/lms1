@@ -1,30 +1,33 @@
-import { PageHeader } from "@/components/PageHeader"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { DialogTrigger } from "@/components/ui/dialog"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { db } from "@/drizzle/db"
-import { CourseSectionTable, CourseTable, LessonTable } from "@/drizzle/schema"
-import { CourseForm } from "@/features/courses/components/CourseForm"
-import { getCourseIdTag } from "@/features/courses/db/cache/courses"
-import { SectionFormDialog } from "@/features/courseSections/components/SectionFormDialog"
-import { getCourseSectionCourseTag } from "@/features/courseSections/db/cache"
-import { getLessonCourseTag } from "@/features/lessons/db/cache"
-import { asc, eq } from "drizzle-orm"
-import { PlusIcon } from "lucide-react"
-import { cacheTag } from "next/dist/server/use-cache/cache-tag"
-import { notFound } from "next/navigation"
-
+// src/app/admin/courses/[courseId]/edit/page.tsx
+import { ActionButton } from "@/components/ActionButton";
+import { PageHeader } from "@/components/PageHeader";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DialogTrigger } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { db } from "@/drizzle/db";
+import { CourseSectionTable, CourseTable, LessonTable } from "@/drizzle/schema";
+import { CourseForm } from "@/features/courses/components/CourseForm";
+import { getCourseIdTag } from "@/features/courses/db/cache/courses";
+import { deleteSection } from "@/features/courseSections/actions/sections";
+import { SectionFormDialog } from "@/features/courseSections/components/SectionFormDialog";
+import { getCourseSectionCourseTag } from "@/features/courseSections/db/cache";
+import { getLessonCourseTag } from "@/features/lessons/db/cache";
+import { cn } from "@/lib/utils";
+import { asc, eq } from "drizzle-orm";
+import { EyeClosedIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import { cacheTag } from "next/dist/server/use-cache/cache-tag";
+import { notFound } from "next/navigation";
 
 export default async function EditCoursePage({
   params,
-}:{
-  params: Promise<{ courseId: string }>
+}: {
+  params: Promise<{ courseId: string }>;
 }) {
-  const { courseId } = await params
-  const course = await getCourse(courseId)
+  const { courseId } = await params;
+  const course = await getCourse(courseId);
 
-  if(course == null) return notFound();
+  if (course == null) return notFound();
 
   return (
     <div className="container my-6">
@@ -47,8 +50,36 @@ export default async function EditCoursePage({
               </SectionFormDialog>
             </CardHeader>
             <CardContent>
-              {course.courseSections.map(section => (
-                <div key={section.id}>ayo, what the heck</div>
+              {course.courseSections.map((section) => (
+                <div key={section.id} className="flex items-center gap-1">
+                  <div
+                    className={cn(
+                      "contents",
+                      section.status === "private" && "text-muted-foreground"
+                    )}
+                  >
+                    {section.status === "private" && (
+                      <EyeClosedIcon className="size-4" />
+                    )}
+                    {section.name}
+                  </div>
+                  <SectionFormDialog section={section} courseId={courseId}>
+                    <DialogTrigger asChild>
+                      <Button variant={"outline"} size="sm" className="ml-auto">
+                        Edit
+                      </Button>
+                    </DialogTrigger>
+                  </SectionFormDialog>
+                  <ActionButton
+                    action={deleteSection.bind(null, section.id)}
+                    requireAreYouSure
+                    variant={"destructiveOutline"}
+                    size={"sm"}
+                  >
+                    <Trash2Icon />
+                  <span className="sr-only">Delete</span>
+                  </ActionButton>
+                </div>
               ))}
             </CardContent>
           </Card>
@@ -57,22 +88,25 @@ export default async function EditCoursePage({
         <TabsContent value="details">
           <Card>
             <CardHeader>
-              <CourseForm course={course}/>
+              <CourseForm course={course} />
             </CardHeader>
           </Card>
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
 
-
 async function getCourse(id: string) {
-  "use cache"
-  cacheTag(getCourseIdTag(id), getCourseSectionCourseTag(id), getLessonCourseTag(id))
+  "use cache";
+  cacheTag(
+    getCourseIdTag(id),
+    getCourseSectionCourseTag(id),
+    getLessonCourseTag(id)
+  );
 
   return db.query.CourseTable.findFirst({
-    columns: { id: true, name: true, description: true},
+    columns: { id: true, name: true, description: true },
     where: eq(CourseTable.id, id),
     with: {
       courseSections: {
@@ -88,11 +122,10 @@ async function getCourse(id: string) {
               description: true,
               youtubeVideoId: true,
               sectionId: true,
-            }
-          }
-        }
-      }
-    }
-  })
-  
+            },
+          },
+        },
+      },
+    },
+  });
 }
