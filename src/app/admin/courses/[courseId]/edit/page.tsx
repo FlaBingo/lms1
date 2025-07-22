@@ -11,6 +11,7 @@ import { CourseForm } from "@/features/courses/components/CourseForm";
 import { getCourseIdTag } from "@/features/courses/db/cache/courses";
 import { deleteSection } from "@/features/courseSections/actions/sections";
 import { SectionFormDialog } from "@/features/courseSections/components/SectionFormDialog";
+import { SortableSectionList } from "@/features/courseSections/components/SortableSectionList";
 import { getCourseSectionCourseTag } from "@/features/courseSections/db/cache";
 import { getLessonCourseTag } from "@/features/lessons/db/cache";
 import { cn } from "@/lib/utils";
@@ -50,39 +51,35 @@ export default async function EditCoursePage({
               </SectionFormDialog>
             </CardHeader>
             <CardContent>
-              {course.courseSections.map((section) => (
-                <div key={section.id} className="flex items-center gap-1">
-                  <div
-                    className={cn(
-                      "contents",
-                      section.status === "private" && "text-muted-foreground"
-                    )}
-                  >
-                    {section.status === "private" && (
-                      <EyeClosedIcon className="size-4" />
-                    )}
-                    {section.name}
-                  </div>
-                  <SectionFormDialog section={section} courseId={courseId}>
-                    <DialogTrigger asChild>
-                      <Button variant={"outline"} size="sm" className="ml-auto">
-                        Edit
-                      </Button>
-                    </DialogTrigger>
-                  </SectionFormDialog>
-                  <ActionButton
-                    action={deleteSection.bind(null, section.id)}
-                    requireAreYouSure
-                    variant={"destructiveOutline"}
-                    size={"sm"}
-                  >
-                    <Trash2Icon />
-                  <span className="sr-only">Delete</span>
-                  </ActionButton>
-                </div>
-              ))}
+              <SortableSectionList
+                courseId={course.id}
+                sections={course.courseSections}
+              />
             </CardContent>
           </Card>
+          <hr className="my-4"/>
+          {/* {course.courseSections.map(section => (
+            <Card key={section.id}>
+              <CardHeader className="flex items-center justify-between gap-4">
+                <CardTitle className={cn("flex items-center gap-2", section.status === "private" && "text-muted-foreground")}>
+                  {section.status === "private" && <EyeClosedIcon />} {section.name}
+                </CardTitle>
+                <LessonFormDialog defaultSectionId={section.id} sections={course.courseSections}>
+                  <DialogTrigger asChild>
+                    <Button variant={"outline"}>
+                      <PlusIcon /> New Lesson
+                    </Button>
+                  </DialogTrigger>
+                </LessonFormDialog>
+              </CardHeader>
+              <CardContent>
+                <SortableLessonList
+                  sections={course.courseSections}
+                  lessons={section.lessons}
+                />
+              </CardContent>
+            </Card>
+          ))} */}
         </TabsContent>
 
         <TabsContent value="details">
